@@ -36,10 +36,21 @@ run:
 ## test: run all tests
 .PHONY: test
 test:
-	go test -v -race -buildvcs ./...
+	go test -v -race -buildvcs -shuffle=on ./...
 
 ## test/cover: run all tests and display coverage
 .PHONY: test/cover
 test/cover:
 	go test -v -race -buildvcs -coverprofile=./bin/coverage.out ./...
 	go tool cover -html=./bin/coverage.out
+
+
+## test: run all tests
+.PHONY: memprofile
+memprofile:
+	go test -bench=. -benchmem -memprofile=mem.out ./internal/cache/...
+
+## test: run benchmark
+.PHONY: bench
+bench:
+	go test -bench=. -benchmem -benchtime=10s -count=1 ./... >  $(shell date "+%Y.%m.%d-%H.%M.%S")_benchmark.txt
