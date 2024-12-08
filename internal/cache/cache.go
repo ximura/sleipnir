@@ -191,6 +191,7 @@ func (c *Cache[K, V]) Range(f func(key K, value V) bool) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 
+	// this can take long time we should loop over copy
 	for k, v := range c.store {
 		if !f(k, v) {
 			return
